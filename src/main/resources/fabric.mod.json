@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "id": "eventlib",
-  "version": "${version}",
+  "version": "1.0",
 
   "name": "EventLib",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "A library for generate events for fabric!",
   "authors": [
-    "Me!"
+    "forestbat"
   ],
   "contact": {
 
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/eventlib/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.eventlib.EventLib"
+      "net.forestbat.eventlib.EventLib"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "eventlib.mixins.json"
   ],
 
   "depends": {

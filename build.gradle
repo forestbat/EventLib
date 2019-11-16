@@ -13,6 +13,14 @@ group = project.maven_group
 minecraft {
 }
 
+compileJava {
+    options.compilerArgs = ["--release", "8" ]
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
 	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:1.14.4"
@@ -21,6 +29,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modCompile "net.fabricmc.fabric-api:fabric-api:0.4.1+build.245-1.14"
+    annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:0.2.0'
 }
 
 processResources {
