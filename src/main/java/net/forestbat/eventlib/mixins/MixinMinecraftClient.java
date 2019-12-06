@@ -25,17 +25,17 @@ public abstract class MixinMinecraftClient {
 
     @Shadow public Window window;
 
-    @Inject(method = "init",at = @At("HEAD"))
+    @Inject(method = "init",at = @At("HEAD"),cancellable = true)
     public void onClientStart(CallbackInfo ci){
         ClientStartCallback.EVENT.invoker().onClientStart((MinecraftClient)(Object)this);
         LOGGER.info("Client Started!");
     }
-    @Inject(method = "stop",at=@At("HEAD"))
+    @Inject(method = "stop",at=@At("HEAD"),cancellable = true)
     public void onClientStop(CallbackInfo callbackInfo){
         ClientStopCallback.EVENT.invoker().onClientStop((MinecraftClient)(Object)this);
         LOGGER.info("Client Shutdown!");
     }
-    @Inject(method = "handleInputEvents",at=@At("HEAD"))
+    /*@Inject(method = "handleInputEvents",at=@At("HEAD"),cancellable = true)
     public void beforeHandleInput(CallbackInfo ci){
         for(int key=0;key<104;key++) {
             int keyCode=GLFW.glfwGetKey(window.getHandle(),key);
@@ -44,9 +44,9 @@ public abstract class MixinMinecraftClient {
             }
             else ci.cancel();
         }
-    }
+    }*/
     //todo arguments are too less
-    @Inject(method = "openScreen",at=@At("HEAD"))
+    @Inject(method = "openScreen",at=@At("HEAD"),cancellable = true)
     public void beforeScreen(Screen screen, CallbackInfo ci){
         if(GuiScreenCallback.GUI_SCREEN_CALLBACK_EVENT.invoker().accept(screen)==ActionResult.FAIL)
             ci.cancel();

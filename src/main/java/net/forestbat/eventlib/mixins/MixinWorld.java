@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(World.class)
 public abstract class MixinWorld {
     @Shadow public abstract World getWorld();
+    @Shadow @Final protected LevelProperties properties;
 
     @Shadow @Final protected static Logger LOGGER;
 
@@ -37,24 +38,15 @@ public abstract class MixinWorld {
         if(ExplosionCallback.EXPLOSION_CALLBACK_EVENT.invoker().accept(entity_1.world,entity_1.getBlockPos())== ActionResult.FAIL)
             cir.cancel();
     }
-    @Inject(method = "getLevelProperties",at=@At("RETURN"))
+    //FIXME
+    /*@Inject(method = "getLevelProperties",at=@At("HEAD"),cancellable = true)
     public void afterProperties(CallbackInfoReturnable<LevelProperties> cir){
-        for(PlayerEntity playerEntity:getWorld().getPlayers())
-        if(cir.getReturnValue().isRaining() && WeatherCallback.WEATHER_CALLBACK_EVENT.invoker().
-                accept(getWorld(),playerEntity,playerEntity.getBlockPos())==ActionResult.FAIL)
+        for(PlayerEntity player:getWorld().getPlayers())
+        if(properties.isRaining() && WeatherCallback.WEATHER_CALLBACK_EVENT.invoker().
+                accept(getWorld(),player,player.getBlockPos())==ActionResult.FAIL)
             cir.cancel();
-    }
-    //I'm not sure a method on client should or not should inject in world
-    @Inject(method = "playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;" +
-            "Lnet/minecraft/sound/SoundCategory;FF)V",at=@At("HEAD"))
-    public void beforePlaySound(PlayerEntity player, double var2, double var4, double var6, SoundEvent event, SoundCategory category,
-                                float var10, float var11, CallbackInfo ci){
-        if(PlaySoundCallback.PLAYER_SLEEP_CALLBACK_EVENT.invoker().accept(player.world,player,player.getBlockPos(),event,category)==
-                ActionResult.FAIL)
-            ci.cancel();
-
-    }
-    @Inject(method = "getTimeOfDay",at=@At("RETURN"))
+    }*/
+    @Inject(method = "getTimeOfDay",at=@At("RETURN"),cancellable = true)
     public void onGetTimeOfDay(CallbackInfoReturnable<Long> cir){
         for(PlayerEntity player:getWorld().getPlayers()) {
             DayNightCallback.DAY_NIGHT_CALLBACK_EVENT.invoker().accept(getWorld(), player);

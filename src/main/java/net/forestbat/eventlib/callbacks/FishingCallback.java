@@ -16,7 +16,7 @@ public interface FishingCallback {
                     if(callback.fishing(world,player).getResult()!=ActionResult.FAIL)
                     return new TypedActionResult<>(ActionResult.PASS, LootContextTypes.FISHING);
                 }
-                return new TypedActionResult<>(ActionResult.FAIL,null);
+                return new TypedActionResult<>(ActionResult.PASS,null);
             }));
     TypedActionResult<LootContextType> fishing(World world, PlayerEntity player);
 }

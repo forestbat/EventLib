@@ -1,12 +1,13 @@
 package net.forestbat.eventlib.callbacks;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.ActionResult;
 
 public interface CommandStartCallback {
-    ActionResult accept(ServerCommandSource source,String command);
+    ActionResult accept(ServerCommandSource source,String command) throws CommandSyntaxException;
     Event<CommandStartCallback> COMMAND_START_CALLBACK_EVENT= EventFactory.createArrayBacked(CommandStartCallback.class,
             listeners->(source,command)->{
                 for(CommandStartCallback callback:listeners){

@@ -1,5 +1,6 @@
 package net.forestbat.eventlib.mixins;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.forestbat.eventlib.callbacks.CommandStartCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -11,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CommandManager.class)
 public class MixinCommandManager {
-    @Inject(method = "execute",at=@At("HEAD"))
-    public void beforeExecute(ServerCommandSource source, String command, CallbackInfoReturnable<Integer> cir){
+    @Inject(method = "execute",at=@At("HEAD"),cancellable = true)
+    public void beforeExecute(ServerCommandSource source, String command, CallbackInfoReturnable<Integer> cir) throws CommandSyntaxException {
         if(CommandStartCallback.COMMAND_START_CALLBACK_EVENT.invoker().accept(source,command)== ActionResult.FAIL)
             cir.cancel();
     }

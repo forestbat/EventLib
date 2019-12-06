@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PortalBlock.class)
 public class MixinPortalBlock {
-   @Inject(method = "createPortalAt",at = @At("HEAD"))
+   @Inject(method = "createPortalAt",at = @At("HEAD"),cancellable = true)
    public void beforePortalAt(IWorld world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
        for(PlayerEntity entity:world.getEntities(PlayerEntity.class,Box.from(MutableIntBoundingBox.empty())))
        if(PortalSpawnCallback.SKIN_LOAD_CALLBACK_EVENT.invoker().accept(entity,world)== ActionResult.FAIL)

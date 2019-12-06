@@ -11,7 +11,7 @@ public interface ModLoadCallback {
                     if (callback.accept(modid) != ActionResult.FAIL)
                         return ActionResult.PASS;
                 }
-                return ActionResult.FAIL;
+                return ActionResult.PASS;
             });
 
     ActionResult accept(String modid);

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Raid.class)
 public class MixinRaid {
-    @Inject(method = "start",at=@At("HEAD"))
+    @Inject(method = "start",at=@At("HEAD"),cancellable = true)
     public void beforeStart(PlayerEntity player, CallbackInfo ci){
         if(RaidCallback.RAID_CALLBACK_EVENT.invoker().accept((Raid)(Object)this,player)== ActionResult.FAIL)
             ci.cancel();

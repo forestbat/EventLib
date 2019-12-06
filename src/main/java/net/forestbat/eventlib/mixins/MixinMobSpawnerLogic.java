@@ -18,7 +18,7 @@ public abstract class MixinMobSpawnerLogic {
 
     @Shadow private Entity renderedEntity;
 
-    @Inject(method = "update",at = @At("HEAD"))
+    @Inject(method = "update",at = @At("HEAD"),cancellable = true)
     public void onUpdate(CallbackInfo ci){
     for(PlayerEntity player:this.getWorld().getPlayers())
         if(MobSpawnerCallback.MOB_SPAWNER_CALLBACK_EVENT.invoker().accept(this.getWorld(),player,this.renderedEntity)== ActionResult.FAIL)

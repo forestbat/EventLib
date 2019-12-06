@@ -13,6 +13,6 @@ public interface KeyInputCallback {
             if(!callback.accept(keyCode).getResult().equals(ActionResult.FAIL))
                 return new TypedActionResult<>(ActionResult.PASS,keyCode);
         }
-        return new TypedActionResult<>(ActionResult.FAIL,keyCode);
+        return new TypedActionResult<>(ActionResult.PASS,keyCode);
     });
 }

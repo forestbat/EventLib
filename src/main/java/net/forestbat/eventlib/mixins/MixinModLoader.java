@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
-@Mixin(FabricLoader.class)
+@Mixin(value = FabricLoader.class,remap = false)
 public class MixinModLoader {
     @Shadow @Final
     protected Map<String,ModContainer> modMap;
-    @Inject(method = "load",at=@At("HEAD"))
+    @Inject(method = "load",at=@At("HEAD"),cancellable = true)
     public void beforeLoad(CallbackInfo callbackInfo){
         for(String modid:modMap.keySet()) {
             if (ModLoadCallback.MOD_LOAD_CALLBACK_EVENT.invoker().accept(modid) == ActionResult.FAIL)

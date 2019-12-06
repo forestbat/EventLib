@@ -16,9 +16,9 @@ public class MixinEnchantment {
     @Shadow
     private CompoundTag tag;
 
-    @Inject(method="addEnchantment",at=@At("RETURN"))
+    @Inject(method="addEnchantment",at=@At("RETURN"),cancellable = true)
     public void beforeEnchantment(Enchantment enchantment, int id, CallbackInfo info){
-        if(EnchantmentCallback.ENTER_DIMENSION_CALLBACK_EVENT.invoker().accept(enchantment,(ItemStack)(Object)this)== ActionResult.FAIL)
+        if(EnchantmentCallback.ENCHANTMENT_CALLBACK_EVENT.invoker().accept(enchantment,(ItemStack)(Object)this)== ActionResult.FAIL)
             info.cancel();
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 
 public interface EnchantmentCallback {
-    Event<EnchantmentCallback> ENTER_DIMENSION_CALLBACK_EVENT= EventFactory.createArrayBacked(
+    Event<EnchantmentCallback> ENCHANTMENT_CALLBACK_EVENT = EventFactory.createArrayBacked(
             EnchantmentCallback.class,callbacks->((enchantment,itemStack) -> {
                 for(EnchantmentCallback callback:callbacks)
                     if(callback.accept(enchantment,itemStack)!= ActionResult.FAIL)

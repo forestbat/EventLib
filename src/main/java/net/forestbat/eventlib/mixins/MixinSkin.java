@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinSkin {
     @Inject(method = "loadSkin(Lcom/mojang/authlib/minecraft/MinecraftProfileTexture;" +
             "Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;Lnet/minecraft/client/texture/PlayerSkinProvider" +
-            "$SkinTextureAvailableCallback;)Lnet/minecraft/util/Identifier;",at = @At("HEAD"))
+            "$SkinTextureAvailableCallback;)Lnet/minecraft/util/Identifier;",at = @At("HEAD"),cancellable = true)
     public void beforeLoadSkin(MinecraftProfileTexture minecraftProfileTexture, MinecraftProfileTexture.Type minecraftProfileTextureType,
                                PlayerSkinProvider.SkinTextureAvailableCallback skinTextureAvailableCallback,
                                CallbackInfoReturnable<Identifier> cir){

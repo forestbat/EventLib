@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinEnterDimension {
     @Shadow public World world;
 
-    @Inject(method = "changeDimension",at=@At("HEAD"))
+    @Inject(method = "changeDimension",at=@At("HEAD"),cancellable = true)
     public void beforeChangeDimension(DimensionType dimension, CallbackInfoReturnable<Entity> callbackInfo){
         World world=callbackInfo.getReturnValue().world;
         if(EnterDimensionCallback.ENTER_DIMENSION_CALLBACK_EVENT.invoker().enterDimension(dimension.create(world),
@@ -26,7 +26,7 @@ public class MixinEnterDimension {
             callbackInfo.cancel();
     }
 
-    @Inject(method = "kill",at=@At("HEAD"))
+    @Inject(method = "kill",at=@At("HEAD"),cancellable = true)
     public void beforeKill(CallbackInfo info){
         Entity entity=(Entity)(Object)this;
         if(!EntityDeathCallback.ENTITY_DEATH_CALLBACK_EVENT.invoker().accept(world,entity,

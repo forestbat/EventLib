@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PistonBlock.class)
 public class MixinPiston {
     //todo It should be more complex
-    @Inject(method = "shouldExtend", at = @At("HEAD"))
+    @Inject(method = "shouldExtend", at = @At("HEAD"),cancellable = true)
     public void beforeExtend(World world, BlockPos blockPos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockEntity(blockPos) instanceof BlockEntity)
             if (PistonCallback.PISTON_CALLBACK_EVENT.invoker().accept((PistonBlockEntity)world.getBlockEntity(blockPos)) == ActionResult.FAIL)

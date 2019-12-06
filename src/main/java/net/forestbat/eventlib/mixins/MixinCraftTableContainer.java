@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CraftingTableContainer.class)
 public class MixinCraftTableContainer {
-    @Inject(method = "updateResult",at=@At("HEAD"))
+    @Inject(method = "updateResult",at=@At("HEAD"),cancellable = true)
     private static void onUpdateResult(int slot, World world, PlayerEntity player, CraftingInventory craftingInventory,
                                        CraftingResultInventory craftingResultInventory, CallbackInfo ci){
         if(RecipeCallback.RECIPE_CALLBACK_EVENT.invoker().accept(slot, world, player)== ActionResult.FAIL)

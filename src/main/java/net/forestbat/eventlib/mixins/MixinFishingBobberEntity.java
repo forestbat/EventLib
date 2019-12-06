@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinFishingBobberEntity {
     @Shadow @Final private PlayerEntity owner;
 
-    @Inject(method = "method_6957",at=@At("HEAD"))
+    @Inject(method = "method_6957",at=@At("HEAD"),cancellable = true)
     public void beforeUse(ItemStack itemStack_1, CallbackInfoReturnable<Integer> cir){
         if(FishingCallback.FISHING_CALLBACK_EVENT.invoker().fishing(this.owner.world,this.owner).getResult()== ActionResult.FAIL)
             cir.cancel();

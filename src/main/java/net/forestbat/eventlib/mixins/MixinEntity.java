@@ -34,12 +34,12 @@ public class MixinEntity {
                 world.getClosestPlayer(itSelf,32D), itSelf.getBlockPos()))
             ci.cancel();
     }
-    @Inject(method = "move",at=@At("HEAD"))
+    @Inject(method = "move",at=@At("HEAD"),cancellable = true)
     public void beforeMove(MovementType movementType, Vec3d vec3d, CallbackInfo ci){
         if(EntityMoveCallback.ENTITY_MOVE_CALLBACK_EVENT.invoker().accept(world,itSelf,itSelf.getPos())== ActionResult.FAIL)
             ci.cancel();
     }
-    @Inject(method = "requestTeleport",at = @At("HEAD"))
+    @Inject(method = "requestTeleport",at = @At("HEAD"),cancellable = true)
     public void beforeTeleport(double posX, double posY, double posZ, CallbackInfo ci){
         Objects.requireNonNull(itSelf.getServer()).getWorlds().forEach(destWorld-> {
             if (EntityTeleportCallback.EVENT.invoker().accept(itSelf, itSelf.getBlockPos(), new BlockPos(posX, posY, posZ), itSelf.world,
@@ -47,7 +47,7 @@ public class MixinEntity {
                 ci.cancel();
         });
     }
-    @Inject(method = "startRiding(Lnet/minecraft/entity/Entity;Z)Z",at=@At("HEAD"))
+    @Inject(method = "startRiding(Lnet/minecraft/entity/Entity;Z)Z",at=@At("HEAD"),cancellable = true)
     public void beforeRiding(Entity horse, boolean tamed, CallbackInfoReturnable<Boolean> cir){
         for(PlayerEntity player:horse.world.getEntities(PlayerEntity.class, Box.from(MutableIntBoundingBox.empty()))) {
         if (RidingCallback.RIDING_CALLBACK_EVENT.invoker().accept(player,horse)==ActionResult.FAIL)

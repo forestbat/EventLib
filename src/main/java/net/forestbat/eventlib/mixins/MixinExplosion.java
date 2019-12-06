@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinExplosion {
     private final String createExplosion="createExplosion(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;" +
             "DDDFZLnet/minecraft/world/explosion/Explosion$DestructionType;)Lnet/minecraft/world/explosion/Explosion;";
-    @Inject(method = createExplosion, at=@At("HEAD"))
+    @Inject(method = createExplosion, at=@At("HEAD"),cancellable = true)
     public void beforeExplosion(Entity entity, DamageSource damageSource, double posX, double posY, double posZ,
                                 float strength, boolean hasSmoke, Explosion.DestructionType destructionType,
                                 CallbackInfoReturnable<Explosion> callbackInfoReturnable){
 
     }
-    @Inject(method = createExplosion,at=@At("RETURN"))
+    @Inject(method = createExplosion,at=@At("RETURN"),cancellable = true)
     public void afterExplosion(Entity entity, DamageSource damageSource, double posX, double posY, double posZ,
                                float strength, boolean hasSmoke, Explosion.DestructionType destructionType,
                                CallbackInfoReturnable<Explosion> callbackInfoReturnable){

@@ -24,7 +24,7 @@ public class MixinServerLoginNetwork {
 
     @Shadow private SecretKey secretKey;
 
-    @Inject(method = "onKey",at=@At("HEAD"))
+    @Inject(method = "onKey",at=@At("HEAD"),cancellable = true)
     public void beforeKey(LoginKeyC2SPacket loginKeyC2SPacket, CallbackInfo ci){
         if(PreLoginCallback.PRE_LOGIN_CALLBACK_EVENT.invoker().accept
                 (this.server,this.secretKey,this.clientEntity)== ActionResult.FAIL)
