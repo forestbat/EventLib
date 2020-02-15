@@ -8,7 +8,7 @@ import net.minecraft.util.ActionResult;
 public interface PlayerLevelupCallback {
     ActionResult accept(PlayerEntity player, int level);
 
-     Event<PlayerLevelupCallback> PLAYER_LEVELUP_CALLBACK_EVENT = EventFactory.createArrayBacked(PlayerLevelupCallback.class,
+    Event<PlayerLevelupCallback> PLAYER_LEVELUP_CALLBACK_EVENT = EventFactory.createArrayBacked(PlayerLevelupCallback.class,
             listeners -> (player, level) -> {
                 for (PlayerLevelupCallback callback : listeners) {
                     if (callback.accept(player, level) != ActionResult.FAIL)

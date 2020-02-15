@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 public interface PlaySoundCallback {
     ActionResult accept(World world, PlayerEntity player, BlockPos pos, SoundEvent event, SoundCategory category);
-     Event<PlaySoundCallback> PLAYER_SLEEP_CALLBACK_EVENT= EventFactory.createArrayBacked(PlaySoundCallback.class,
+    Event<PlaySoundCallback> PLAY_SOUND_CALLBACK_EVENT= EventFactory.createArrayBacked(PlaySoundCallback.class,
             listeners->(
             (world,player,pos,event,category) ->{
                 for(PlaySoundCallback callback:listeners){

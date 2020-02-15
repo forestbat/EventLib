@@ -12,7 +12,7 @@ public interface EntityHealCallback {
                 for(EntityHealCallback callback:callbacks)
                     if(callback.accept(entity,world,health)!= ActionResult.FAIL)
                         return ActionResult.PASS;
-                return ActionResult.FAIL;
+                return ActionResult.PASS;
             });
     ActionResult accept(LivingEntity entity, World world, float health);
 }

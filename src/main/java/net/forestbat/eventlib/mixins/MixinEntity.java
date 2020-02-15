@@ -30,8 +30,8 @@ public class MixinEntity {
 
     @Inject(method = "kill",at=@At("HEAD"),cancellable = true)
     public void onDeath(CallbackInfo ci){
-        if(!EntityDeathCallback.ENTITY_DEATH_CALLBACK_EVENT.invoker().accept(world, itSelf,
-                world.getClosestPlayer(itSelf,32D), itSelf.getBlockPos()))
+        if(EntityDeathCallback.ENTITY_DEATH_CALLBACK_EVENT.invoker().accept(world, itSelf,
+                world.getClosestPlayer(itSelf,32D), itSelf.getBlockPos())==ActionResult.FAIL)
             ci.cancel();
     }
     @Inject(method = "move",at=@At("HEAD"),cancellable = true)
@@ -42,7 +42,7 @@ public class MixinEntity {
     @Inject(method = "requestTeleport",at = @At("HEAD"),cancellable = true)
     public void beforeTeleport(double posX, double posY, double posZ, CallbackInfo ci){
         Objects.requireNonNull(itSelf.getServer()).getWorlds().forEach(destWorld-> {
-            if (EntityTeleportCallback.EVENT.invoker().accept(itSelf, itSelf.getBlockPos(), new BlockPos(posX, posY, posZ), itSelf.world,
+            if (EntityTeleportCallback.ENTITY_TELEPORT_CALLBACK_EVENT.invoker().accept(itSelf, itSelf.getBlockPos(), new BlockPos(posX, posY, posZ), itSelf.world,
                     destWorld)==ActionResult.FAIL)
                 ci.cancel();
         });

@@ -12,7 +12,7 @@ public interface EnchantmentCallback {
                 for(EnchantmentCallback callback:callbacks)
                     if(callback.accept(enchantment,itemStack)!= ActionResult.FAIL)
                         return ActionResult.PASS;
-                return ActionResult.FAIL;
+                return ActionResult.PASS;
             })
     );
     ActionResult accept(Enchantment enchantment, ItemStack itemStack);

@@ -9,8 +9,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public interface PlayerChatCallback {
-    TypedActionResult<Text> accept(PlayerEntity entity, World world,Text text);
-     Event<PlayerChatCallback> SKIN_LOAD_CALLBACK_EVENT = EventFactory.createArrayBacked(PlayerChatCallback.class,
+     TypedActionResult<Text> accept(PlayerEntity entity, World world,Text text);
+     Event<PlayerChatCallback> PLAYER_CHAT_CALLBACK_EVENT = EventFactory.createArrayBacked(PlayerChatCallback.class,
             listeners->(world,player,text)->{
                 for(PlayerChatCallback callback:listeners){
                     if(callback.accept(world,player,text).getResult()!=ActionResult.FAIL)

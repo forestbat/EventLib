@@ -30,7 +30,7 @@ public class MixinPlayerEntity {
     }
     @Inject(method = "addChatMessage" ,at=@At("HEAD"),cancellable = true)
     public void beforeChat(Text text, boolean boolean_1, CallbackInfo ci){
-        if(PlayerChatCallback.SKIN_LOAD_CALLBACK_EVENT.invoker().accept(player,player.world,text).getResult()==ActionResult.FAIL)
+        if(PlayerChatCallback.PLAYER_CHAT_CALLBACK_EVENT.invoker().accept(player,player.world,text).getResult()==ActionResult.FAIL)
             ci.cancel();
     }
     @Inject(method = "trySleep",at=@At("HEAD"),cancellable = true)

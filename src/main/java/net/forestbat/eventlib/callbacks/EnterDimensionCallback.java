@@ -14,7 +14,7 @@ public interface EnterDimensionCallback {
                 for(EnterDimensionCallback callback:callbacks)
                     if(callback.enterDimension(dimension,entity,world,dimensionType)!=ActionResult.FAIL)
                         return ActionResult.PASS;
-                    return ActionResult.FAIL;
+                    return ActionResult.PASS;
             })
     );
     ActionResult enterDimension(Dimension dimension, Entity entity, World world, DimensionType dimensionType);

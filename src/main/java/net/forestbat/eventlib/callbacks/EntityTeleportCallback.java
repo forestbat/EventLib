@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface EntityTeleportCallback {
-    Event<EntityTeleportCallback> EVENT= EventFactory.createArrayBacked(EntityTeleportCallback.class,
+    Event<EntityTeleportCallback> ENTITY_TELEPORT_CALLBACK_EVENT = EventFactory.createArrayBacked(EntityTeleportCallback.class,
             listeners->(entity,startPos,destPos,startWorld,destWorld)->{
                 for(EntityTeleportCallback callback:listeners){
                     if(callback.accept(entity,startPos,destPos,startWorld,destWorld)!=ActionResult.FAIL)

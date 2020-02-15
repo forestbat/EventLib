@@ -29,8 +29,8 @@ public class MixinEnterDimension {
     @Inject(method = "kill",at=@At("HEAD"),cancellable = true)
     public void beforeKill(CallbackInfo info){
         Entity entity=(Entity)(Object)this;
-        if(!EntityDeathCallback.ENTITY_DEATH_CALLBACK_EVENT.invoker().accept(world,entity,
-                world.getClosestPlayer(entity,32),entity.getBlockPos()))
+        if(EntityDeathCallback.ENTITY_DEATH_CALLBACK_EVENT.invoker().accept(world,entity,
+                world.getClosestPlayer(entity,32),entity.getBlockPos())==ActionResult.FAIL)
             info.cancel();
     }
 }

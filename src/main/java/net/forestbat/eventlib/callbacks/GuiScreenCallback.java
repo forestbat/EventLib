@@ -10,7 +10,7 @@ import net.minecraft.util.ActionResult;
 @Environment(EnvType.CLIENT)
 public interface GuiScreenCallback {
     Event<GuiScreenCallback> GUI_SCREEN_CALLBACK_EVENT= EventFactory.createArrayBacked(GuiScreenCallback.class,
-            callbacks->screen -> {
+            callbacks-> screen -> {
                 for(GuiScreenCallback callback:callbacks) {
                     if(callback.accept(screen)!= ActionResult.FAIL)
                         return ActionResult.PASS;
