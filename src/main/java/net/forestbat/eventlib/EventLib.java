@@ -39,9 +39,7 @@ public class EventLib implements ModInitializer {
 					minecraftServer.sendMessage(new LiteralText("xia yu le"));
 		});*/
 		//todo proved
-		ClientStartCallback.EVENT.register(client -> {
-			LOGGER.warn("Client Started!");
-		});
+		ClientStartCallback.EVENT.register(client -> LOGGER.warn("Client Started!"));
 		//todo proved
 		ClientStopCallback.EVENT.register(client -> LOGGER.warn("Client Stopped!"));
 		PlayerSleepCallback.PLAYER_SLEEP_CALLBACK_EVENT.register((player,bedPos,time)->{
