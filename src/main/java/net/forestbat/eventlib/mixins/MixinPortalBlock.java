@@ -8,17 +8,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MutableIntBoundingBox;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PortalBlock.class)
+@Mixin(PortalBlock.AreaHelper.class)
 public class MixinPortalBlock {
-   @Inject(method = "createPortalAt",at = @At("HEAD"),cancellable = true)
-   public void beforePortalAt(IWorld world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
-       for(PlayerEntity entity:world.getEntities(PlayerEntity.class,Box.from(MutableIntBoundingBox.empty())))
-       if(PortalSpawnCallback.SKIN_LOAD_CALLBACK_EVENT.invoker().accept(entity,world)== ActionResult.FAIL)
-           cir.cancel();
+   @Final @Shadow
+   private IWorld world;
+   @Inject(method = "createPortal",at = @At("HEAD"),cancellable = true)
+   public void beforeCreatePortal(CallbackInfo ci){
+       for(PlayerEntity playerEntity:world.getPlayers())
+       if(PortalSpawnCallback.PORTAL_SPAWN_CALLBACK_EVENT.invoker().accept(playerEntity, (World) world)== ActionResult.FAIL)
+           ci.cancel();
    }
 }

@@ -10,12 +10,12 @@ import net.minecraft.world.dimension.DimensionType;
 
 public interface EnterDimensionCallback {
     Event<EnterDimensionCallback> ENTER_DIMENSION_CALLBACK_EVENT= EventFactory.createArrayBacked(
-            EnterDimensionCallback.class,callbacks->((dimension, entity, world, dimensionType) -> {
+            EnterDimensionCallback.class,callbacks->((dimension,entity, world, dimensionType) -> {
                 for(EnterDimensionCallback callback:callbacks)
                     if(callback.enterDimension(dimension,entity,world,dimensionType)!=ActionResult.FAIL)
                         return ActionResult.PASS;
                     return ActionResult.PASS;
             })
     );
-    ActionResult enterDimension(Dimension dimension, Entity entity, World world, DimensionType dimensionType);
+    ActionResult enterDimension(Dimension dimension,Entity entity, World world, DimensionType dimensionType);
 }

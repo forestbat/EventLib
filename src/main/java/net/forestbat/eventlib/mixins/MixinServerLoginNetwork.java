@@ -4,6 +4,7 @@ import net.forestbat.eventlib.callbacks.PreLoginCallback;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.network.packet.LoginHelloC2SPacket;
 import net.minecraft.server.network.packet.LoginKeyC2SPacket;
 import net.minecraft.util.ActionResult;
 import org.spongepowered.asm.mixin.Final;
@@ -17,12 +18,16 @@ import javax.crypto.SecretKey;
 
 @Mixin(ServerLoginNetworkHandler.class)
 public class MixinServerLoginNetwork {
-    //FIXME
     @Shadow @Final private MinecraftServer server;
 
     @Shadow private ServerPlayerEntity clientEntity;
 
     @Shadow private SecretKey secretKey;
+    @Inject(method = "onHello",at=@At("HEAD"),cancellable = true)
+    public void beforeHello(LoginHelloC2SPacket loginHelloC2SPacket, CallbackInfo ci){
+        if(PreLoginCallback.PRE_LOGIN_CALLBACK_EVENT.invoker().accept(this.server,this.secretKey,this.clientEntity)==ActionResult.FAIL)
+            ci.cancel();
+    }
 
     @Inject(method = "onKey",at=@At("HEAD"),cancellable = true)
     public void beforeKey(LoginKeyC2SPacket loginKeyC2SPacket, CallbackInfo ci){

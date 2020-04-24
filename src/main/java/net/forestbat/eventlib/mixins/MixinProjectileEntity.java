@@ -16,7 +16,7 @@ public class MixinProjectileEntity {
     @Inject(method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",at=@At(
             "RETURN"),cancellable = true)
     public void beforeInit(EntityType<? extends ProjectileEntity> entityType, LivingEntity livingEntity, World world, CallbackInfo ci){
-        if(ShootingCallback.SHOOTING_CALLBACK_EVENT.invoker().accept(livingEntity,(ProjectileEntity)(Object)this,world)== ActionResult.FAIL)
+        if(ShootingCallback.SHOOTING_CALLBACK_EVENT.invoker().accept(livingEntity,world,(ProjectileEntity)(Object)this)== ActionResult.FAIL)
             ci.cancel();
     }
 }

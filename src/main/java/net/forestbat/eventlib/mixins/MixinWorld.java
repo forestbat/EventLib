@@ -2,13 +2,9 @@ package net.forestbat.eventlib.mixins;
 
 import net.forestbat.eventlib.callbacks.DayNightCallback;
 import net.forestbat.eventlib.callbacks.ExplosionCallback;
-import net.forestbat.eventlib.callbacks.PlaySoundCallback;
-import net.forestbat.eventlib.callbacks.WeatherCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -19,7 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(World.class)
@@ -38,14 +33,6 @@ public abstract class MixinWorld {
         if(ExplosionCallback.EXPLOSION_CALLBACK_EVENT.invoker().accept(entity_1.world,entity_1.getBlockPos())== ActionResult.FAIL)
             cir.cancel();
     }
-    //FIXME
-    /*@Inject(method = "getLevelProperties",at=@At("HEAD"),cancellable = true)
-    public void afterProperties(CallbackInfoReturnable<LevelProperties> cir){
-        for(PlayerEntity player:getWorld().getPlayers())
-        if(properties.isRaining() && WeatherCallback.WEATHER_CALLBACK_EVENT.invoker().
-                accept(getWorld(),player,player.getBlockPos())==ActionResult.FAIL)
-            cir.cancel();
-    }*/
     @Inject(method = "getTimeOfDay",at=@At("RETURN"),cancellable = true)
     public void onGetTimeOfDay(CallbackInfoReturnable<Long> cir){
         for(PlayerEntity player:getWorld().getPlayers()) {

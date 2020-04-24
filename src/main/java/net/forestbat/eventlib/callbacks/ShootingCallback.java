@@ -8,11 +8,11 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 
 public interface ShootingCallback {
-    ActionResult accept(LivingEntity player, ProjectileEntity entity, World world);
+    ActionResult accept(LivingEntity player, World world,ProjectileEntity projectileEntity);
     Event<ShootingCallback> SHOOTING_CALLBACK_EVENT= EventFactory.createArrayBacked(ShootingCallback.class,
-            listeners->(player,entity,world)->{
+            listeners->(player,world,projectileEntity)->{
                 for(ShootingCallback callback:listeners){
-                    if(callback.accept(player,entity,world)!=ActionResult.FAIL)
+                    if(callback.accept(player,world,projectileEntity)!=ActionResult.FAIL)
                         return ActionResult.PASS;
                 }
                 return ActionResult.PASS;

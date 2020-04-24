@@ -3,30 +3,32 @@
   "package": "net.forestbat.eventlib.mixins",
   "compatibilityLevel": "JAVA_11",
   "mixins": [
-    "MixinBlockEntity",
     "MixinCommandManager",
-    "MixinCraftTableContainer",
     "MixinEnchantment",
-    "MixinEnterDimension",
     "MixinEntity",
     "MixinEntitySpawn",
     "MixinExplosion",
+    "MixinFireworkItem",
     "MixinFishingBobberEntity",
+    "MixinItemStack",
     "MixinLivingEntity",
     "MixinMobSpawnerLogic",
-    "MixinPiston",
+    "MixinNetworkThreadUtil",
     "MixinPlayerEntity",
     "MixinPortalBlock",
+    "MixinProjectileEntity",
     "MixinRaid",
     "MixinServerLoginNetwork",
-    "MixinSkin",
+    "MixinServerPlayerEntity",
+    "MixinServerPlayHandler",
+    "MixinServerWorld",
+    "MixinTameableEntity",
     "MixinWorld",
     "MixinWorldChunk"
   ],
   "client": [
-    "MixinMinecraftClient",
     "MixinClientWorld",
-    "MixinClientAdvManager"
+    "MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1

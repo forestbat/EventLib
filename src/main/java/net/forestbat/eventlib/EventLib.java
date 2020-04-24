@@ -1,34 +1,25 @@
 package net.forestbat.eventlib;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.forestbat.eventlib.callbacks.*;
-import net.forestbat.eventlib.packets.KeyBindingPacket;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.PistonBlockEntity;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.TntEntity;
-import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.*;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.EndermanEntity;
+import net.minecraft.entity.mob.WitherSkeletonEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.dimension.DimensionType;
@@ -37,16 +28,22 @@ import net.minecraft.world.loot.context.LootContextTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Objects;
-
 public class EventLib implements ModInitializer {
 	public static Logger LOGGER= LogManager.getLogger();
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
 		LOGGER.info("EventLib is loaded!");
+		/*ServerTickCallback.EVENT.register(minecraftServer -> {
+			for(World world:minecraftServer.getWorlds())
+				if(world.isRaining())
+					minecraftServer.sendMessage(new LiteralText("xia yu le"));
+		});*/
+		//todo proved
+		ClientStartCallback.EVENT.register(client -> {
+			LOGGER.warn("Client Started!");
+		});
+		//todo proved
+		ClientStopCallback.EVENT.register(client -> LOGGER.warn("Client Stopped!"));
 		PlayerSleepCallback.PLAYER_SLEEP_CALLBACK_EVENT.register((player,bedPos,time)->{
 			if(player.inventory.isInvEmpty()) {
 				Entity entity=new SheepEntity(EntityType.SHEEP,player.world);
@@ -55,17 +52,20 @@ public class EventLib implements ModInitializer {
 			}
 			return ActionResult.PASS;
 		});
-		EnchantmentCallback.ENCHANTMENT_CALLBACK_EVENT.register(((enchantment, itemStack) -> {
-			if(enchantment.getMaximumLevel()==3)
+		//todo proved
+		EnchantmentCallback.ENCHANTMENT_CALLBACK_EVENT.register(((playerEntity,itemStack,level) -> {
+			if(itemStack.getTranslationKey().contains("gold"))
 				itemStack.setDamage(itemStack.getMaxDamage()/2);
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		PlayerLevelupCallback.PLAYER_LEVELUP_CALLBACK_EVENT.register((player,level)->{
-			if(level>30)
+			if(player.experienceLevel>30)
 				player.addPotionEffect(new StatusEffectInstance(StatusEffects.BLINDNESS,30,1));
 			return ActionResult.PASS;
 		});
-		CommandStartCallback.COMMAND_START_CALLBACK_EVENT.register((source,command)->{
+		//todo proved
+		/*CommandStartCallback.COMMAND_START_CALLBACK_EVENT.register((source,command)->{
 			if(source.getEntityOrThrow()!=null) {
 				Entity entity=source.getEntity();
 				if (command.contains("give") && entity instanceof PlayerEntity)
@@ -73,143 +73,146 @@ public class EventLib implements ModInitializer {
 				return ActionResult.PASS;
 			}
 			return ActionResult.PASS;
-		});
-		BlockEntityConstructCallback.BLOCK_ENTITY_CONSTRUCT_CALLBACK_EVENT.register((type,pos,world)->{
-			if(type.equals(BlockEntityType.FURNACE) && world!=null)
+		});*/
+		//todo proved
+		BlockEntityConstructCallback.BLOCK_ENTITY_CONSTRUCT_CALLBACK_EVENT.register((blockEntity,pos,world)->{
+			if(blockEntity instanceof FurnaceBlockEntity && world!=null) {
+				world.getLevelProperties().setClearWeatherTime(0);
 				world.getLevelProperties().setRaining(true);
+			}
 			return ActionResult.PASS;
 		});
+		//todo proved
 		FishingCallback.FISHING_CALLBACK_EVENT.register(((world, player) -> {
 			if(world.getLevelProperties().isRaining())
 				player.dropItem(new ItemStack(Items.DIAMOND),false);
 			return new TypedActionResult<>(ActionResult.PASS, LootContextTypes.CHEST);
 		}));
-		//fixme
+		//todo proved
 		AdvancementCallback.ADVANCEMENT_CALLBACK_EVENT.register(((playerEntity, world, advancementPacket) -> {
 			advancementPacket.getAdvancementsToProgress().forEach(((identifier, advancementProgress) -> {
-				if(Objects.requireNonNull(advancementProgress.getCriterionProgress("diamond!")).isObtained())
-					playerEntity.dropItem(new ItemStack(Items.EMERALD_BLOCK),false);
+				if(identifier.toString().equals("minecraft:story/mine_diamond"))
+					playerEntity.dropItem(Items.EMERALD_BLOCK);
 			}));
 			return ActionResult.PASS;
-		}));
+			}));
+		 
+		//todo proved
 		ChunkLoadCallback.CHUNK_LOAD_CALLBACK_EVENT.register((chunk -> {
-			if(chunk.getBiome(new BlockPos(200,80,200))== Biomes.SNOWY_MOUNTAINS) {
-				Entity entity=new SheepEntity(EntityType.SHEEP,chunk.getWorld());
+			if(chunk.getBiome(new BlockPos(200,80,200))== Biomes.SWAMP) {
+				Entity entity=new EnderDragonEntity(EntityType.ENDER_DRAGON,chunk.getWorld());
 				entity.setPosition(200,80,200);
 				chunk.addEntity(entity);
 			}
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		DayNightCallback.DAY_NIGHT_CALLBACK_EVENT.register(((world, player) -> {
 			if(world.isThundering())
 				player.addPotionEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE));
 		}));
-		EnterDimensionCallback.ENTER_DIMENSION_CALLBACK_EVENT.register(((dimension, entity, world, dimensionType) -> {
-			if(dimensionType.equals(DimensionType.THE_END))
-				world.getEntities(EntityType.ENDER_DRAGON, Box.from(MutableIntBoundingBox.create(1000,0,1000,0,1000,0)),
-						dragon->dragon.distanceTo(entity)<200).forEach(Entity::kill);
+		//todo proved
+		EnterDimensionCallback.ENTER_DIMENSION_CALLBACK_EVENT.register(((dimension,entity, world, dimensionType) -> {
+			if(!world.isClient && dimensionType.equals(DimensionType.THE_END) && entity instanceof LivingEntity)
+				entity.dropItem(Items.DIAMOND);
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		EntityDeathCallback.ENTITY_DEATH_CALLBACK_EVENT.register(((world, entity, playerEntity, pos) -> {
-			if(entity instanceof WitherEntity)
+			if(entity instanceof WitherSkeletonEntity)
 				entity.dropItem(Items.ACACIA_BOAT);
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		EntityHealCallback.ENTITY_HEAL_CALLBACK_EVENT.register(((entity, world, health) -> {
-			if(entity instanceof PlayerEntity)
+			if(entity instanceof CreeperEntity)
 				entity.setHealth(entity.getMaxBreath());
 			return ActionResult.PASS;
 		}));
-		EntityMoveCallback.ENTITY_MOVE_CALLBACK_EVENT.register(((world, self, direction) -> {
-			if(direction.x>0 && direction.z>0 && direction.x<0.5 && direction.z<0.5)
+		//todo proved
+		/*EntityMoveCallback.ENTITY_MOVE_CALLBACK_EVENT.register(((world, self, direction) -> {
+			if(self instanceof LivingEntity && direction.x>0 && direction.z>0 && direction.x<0.5 && direction.z<0.5)
 				self.dropItem(Items.ANVIL);
 			return ActionResult.PASS;
-		}));
+		}));*/
+		//todo proved
 		EntitySpawnCallback.EVENT_SPAWN_CALLBACK.register(((world, player, self, pos) -> {
 			if(self instanceof PigEntity)
 				self.dropItem(Items.BONE_MEAL);
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		ExplosionCallback.EXPLOSION_CALLBACK_EVENT.register(((world, pos) -> {
 			if(pos.getY()>64)
-				world.getPlayers().forEach(player->player.sendMessage(new LiteralText("wo cao ni ma!")));
+				world.getPlayers().forEach(player->{
+					if(!player.world.isClient)
+					player.sendMessage(new LiteralText("wo cao ni ma!"));
+				});
 			return ActionResult.PASS;
 		}));
-		EntityTeleportCallback.ENTITY_TELEPORT_CALLBACK_EVENT.register(((entity, startPos, destPos, startWorld, destWorld) -> {
-			if(startWorld.getDimension().getType()==DimensionType.OVERWORLD && destWorld.getDimension().getType()==DimensionType.THE_END) {
-				Entity tnt=new TntEntity(startWorld,startPos.getX(),startPos.getY(),startPos.getZ(),null);
-				startWorld.createExplosion(tnt,startPos.getX(),startPos.getY(),startPos.getZ(),7, Explosion.DestructionType.DESTROY);
+		//todo proved
+		EntityTeleportCallback.ENTITY_TELEPORT_CALLBACK_EVENT.register(((entity, startPos, destPos) -> {
+			if(entity instanceof EndermanEntity && startPos.getY()>40) {
+				Entity tnt=new TntEntity(entity.world,startPos.getX(),startPos.getY(),startPos.getZ(),null);
+				entity.world.createExplosion(tnt,startPos.getX(),startPos.getY(),startPos.getZ(),7, Explosion.DestructionType.DESTROY);
 			}
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		FireworkCallback.FIREWORK_CALLBACK_EVENT.register((world,player,firework)->{
-			if(world.getBiome(player.getBlockPos())==Biomes.BIRCH_FOREST)
+			if(world.getBiome(player.getBlockPos())==Biomes.MOUNTAINS && !world.isClient)
 				player.sendMessage(new LiteralText("ni ma zha le"));
 			return ActionResult.PASS;
 		});
-		FishingCallback.FISHING_CALLBACK_EVENT.register((world,player)->{
-			if(world.isRaining())
-				player.sendMessage(new LiteralText("亲爱的，下雨天能钓上更多鱼是个谣言"));
-			return new TypedActionResult<>(ActionResult.PASS,LootContextTypes.FISHING);
-		});
+		//todo proved
 		GuiScreenCallback.GUI_SCREEN_CALLBACK_EVENT.register(screen -> {
-			if(screen.isPauseScreen())
-				screen.resize(MinecraftClient.getInstance(),800,600);
+			if(screen.isPauseScreen()) {
+				LOGGER.warn("PAUSED!");
+			}
 			return ActionResult.PASS;
 		});
-		KeyInputCallback.KEY_INPUT_CALLBACK_EVENT.register((keyCode,player) -> {
-			if(keyCode==57) {
-				ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, new KeyBindingPacket().setKeyCode(57));
-				player.setStackInHand(Hand.MAIN_HAND,new ItemStack(Items.DIAMOND,64));
-			}
-			return new TypedActionResult<>(ActionResult.PASS,57);
-		});
+		//todo proved
 		MobSpawnerCallback.MOB_SPAWNER_CALLBACK_EVENT.register((world, playerEntity, mobEntity) -> {
-			if(mobEntity.getType()==EntityType.PIG)
+			if(world.isClient && mobEntity!=null&&mobEntity.getType()==EntityType.PIG)
 				playerEntity.sendMessage(new LiteralText("这不清真"));
 			return ActionResult.PASS;
 		});
+		//todo proved
 		OpenContainerCallback.OPEN_CONTAINER_CALLBACK_EVENT.register(playerEntity -> {
-			if(playerEntity.inventory.isInvEmpty())
-				playerEntity.getArmorItems().forEach(itemStack -> {
-					itemStack.setDamage(itemStack.getMaxDamage());
-				});
+			if(!playerEntity.inventory.isInvEmpty())
+				playerEntity.getArmorItems().forEach(itemStack ->
+					itemStack.setDamage(itemStack.getMaxDamage()/2));
 			return ActionResult.PASS;
 		});
-		//todo
-		PistonCallback.PISTON_CALLBACK_EVENT.register(piston -> {
-			piston.getPushedBlock().activate(piston.getWorld(),null,null, new BlockHitResult(new Vec3d(1,1,1),
-					Direction.NORTH,new BlockPos(0,0,0),false));
-			return null;
-		});
-		PlayerChatCallback.PLAYER_CHAT_CALLBACK_EVENT.register((entity, world, text) -> {
-			if(text.getString().contains("nmsl"))
-				entity.kill();
+		//todo proved
+		PlayerChatCallback.PLAYER_CHAT_CALLBACK_EVENT.register((player, text) -> {
+			if(text.asString().contains("nmsl"))
+				player.kill();
 			return new TypedActionResult<>(ActionResult.PASS,text);
 		});
+		//todo proved
 		PlaySoundCallback.PLAY_SOUND_CALLBACK_EVENT.register((world, player, pos, event, category) -> {
 			if(category.equals(SoundCategory.WEATHER)){
-				Entity entity=new LightningEntity(world,player.getBlockPos().getX(),player.getBlockPos().getY(),
-						player.getBlockPos().getZ(),true);
+				Entity entity=new LightningEntity(world,player.getBlockPos().getX()+0.5,player.getBlockPos().getY(),
+						player.getBlockPos().getZ()+0.5,false);
 				world.spawnEntity(entity);
 			}
 			return ActionResult.PASS;
 		});
+		//todo proved
 		PortalSpawnCallback.PORTAL_SPAWN_CALLBACK_EVENT.register((playerEntity, world) -> {
-			playerEntity.playerContainer.getStacks().forEach(itemStack -> {
-				if(itemStack.getItem()==Items.FLINT)
+				if(playerEntity.getMainHandStack().getItem()==Items.FLINT_AND_STEEL)
 					world.createExplosion(new TntEntity(EntityType.TNT,world),playerEntity.getBlockPos().getX(),
 							playerEntity.getBlockPos().getY(),
 							playerEntity.getBlockPos().getZ(),7,true, Explosion.DestructionType.DESTROY);
-
+				return ActionResult.PASS;
 			});
-			return ActionResult.PASS;
-		});
+		//todo proved
 		PreLoginCallback.PRE_LOGIN_CALLBACK_EVENT.register(((server, key, entity) -> {
-			if(server.getMaxPlayerCount()>1)
-				server.save(true,true,true);
+			LOGGER.warn(server.getMaxPlayerCount());
 			return ActionResult.PASS;
 		}));
+		//todo proved
 		RaidCallback.RAID_CALLBACK_EVENT.register((raid, player) -> {
 			if(raid.hasStarted())
 				player.inventory.armor.forEach(itemStack -> {
@@ -218,36 +221,32 @@ public class EventLib implements ModInitializer {
 				});
 			return ActionResult.PASS;
 		});
-		RecipeCallback.RECIPE_CALLBACK_EVENT.register((slot, world, player) -> {
-			if(player.playerContainer.getCraftingSlotCount()==4)
+		//todo proved
+		RecipeCallback.RECIPE_CALLBACK_EVENT.register((world, player,itemStack) -> {
+			if(!world.isClient && itemStack.getItem()==Items.CRAFTING_TABLE)
 				return ActionResult.FAIL;
 			return ActionResult.PASS;
 		});
+		//todo proved
 		RidingCallback.RIDING_CALLBACK_EVENT.register((player, horse) -> {
 			if(horse.getDisplayName().toString().contains("nmsl"))
 				horse.kill();
 			return ActionResult.PASS;
 		});
-		ShootingCallback.SHOOTING_CALLBACK_EVENT.register((player, entity, world) -> {
-			if(player instanceof PlayerEntity && ((PlayerEntity)player).inventory.getMainHandStack().getDamage()<100 && world.isThundering())
+		//todo proved
+		ShootingCallback.SHOOTING_CALLBACK_EVENT.register((player,world,projectileEntity) -> {
+			if(player instanceof PlayerEntity && world.isThundering()) {
+				projectileEntity.remove();
 				return ActionResult.FAIL;
+			}
 			return ActionResult.PASS;
 		});
-		SkinLoadCallback.SKIN_LOAD_CALLBACK_EVENT.register((world, playerEntity, identifier) -> {
-			if(playerEntity.getDisplayName().toString().contains("Player"))
-				playerEntity.doesRenderOnFire();
-			return ActionResult.PASS;
-		});
+		//todo proved
 		TamedEntityCallback.TAMED_ENTITY_CALLBACK_EVENT.register((world, playerEntity, entity) -> {
 			if(!entity.isFireImmune()) {
 				entity.setOnFireFor(8);
 				entity.addPotionEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST));
 			}
-			return ActionResult.PASS;
-		});
-		WeatherCallback.WEATHER_CALLBACK_EVENT.register((world, playerEntity, pos) -> {
-			if(world.getSeaLevel()<24)
-				world.setBlockState(playerEntity.getBlockPos().down(), Blocks.WATER.getDefaultState());
 			return ActionResult.PASS;
 		});
 	}

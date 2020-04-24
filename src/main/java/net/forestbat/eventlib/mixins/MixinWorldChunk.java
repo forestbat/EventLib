@@ -1,7 +1,10 @@
 package net.forestbat.eventlib.mixins;
 
+import net.forestbat.eventlib.callbacks.BlockEntityConstructCallback;
 import net.forestbat.eventlib.callbacks.ChunkLoadCallback;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.chunk.WorldChunk;
@@ -20,5 +23,11 @@ public class MixinWorldChunk {
     public void onChunkConstruct(World world_1, ProtoChunk protoChunk_1, CallbackInfo ci){
         if(ChunkLoadCallback.CHUNK_LOAD_CALLBACK_EVENT.invoker().accept((WorldChunk)(Object)this)== ActionResult.FAIL)
             loadedToWorld=false;
+    }
+    @Inject(method = "setBlockEntity",at=@At("RETURN"),cancellable = true)
+    public void beforeSetBlockEntity(BlockPos blockPos, BlockEntity blockEntity, CallbackInfo ci){
+        if(BlockEntityConstructCallback.BLOCK_ENTITY_CONSTRUCT_CALLBACK_EVENT.invoker().
+                accept(blockEntity,blockPos,blockEntity.getWorld())==ActionResult.FAIL)
+            ci.cancel();
     }
 }
