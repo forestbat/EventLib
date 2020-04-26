@@ -21,12 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinWorld {
     @Shadow public abstract World getWorld();
 
-    @Inject(method ="createExplosion(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;DDDFZLnet/minecraft/world/explosion/Explosion$DestructionType;)Lnet/minecraft/world/explosion/Explosion;",
-            at = @At("HEAD"),cancellable = true)
-    public void beforeExplosion(Entity entity, DamageSource damageSource, double d, double e, double f, float g, boolean bl, Explosion.DestructionType destructionType, CallbackInfoReturnable<Explosion> cir) {
-        if(ExplosionCallback.EXPLOSION_CALLBACK_EVENT.invoker().accept(entity.world,entity.getBlockPos())== ActionResult.FAIL)
-            cir.cancel();
-    }
     @Inject(method = "getTimeOfDay",at=@At("RETURN"),cancellable = true)
     public void onGetTimeOfDay(CallbackInfoReturnable<Long> cir){
         if (cir.getReturnValue() == 450) {
