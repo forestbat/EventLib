@@ -3,6 +3,7 @@
   "package": "net.forestbat.eventlib.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinClientPlayHandler",
     "MixinCommandManager",
     "MixinEnchantment",
     "MixinEntity",

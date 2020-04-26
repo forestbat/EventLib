@@ -93,11 +93,10 @@ public class EventLib implements ModInitializer {
 					playerEntity.dropItem(Items.EMERALD_BLOCK);
 			}));
 			return ActionResult.PASS;
-			}));
-		 
+		}));
 		//todo proved
 		ChunkLoadCallback.CHUNK_LOAD_CALLBACK_EVENT.register((chunk -> {
-			if(chunk.getBiome(new BlockPos(200,80,200))== Biomes.SWAMP) {
+			if(chunk!=null && chunk.getBiome(new BlockPos(200,80,200))== Biomes.SWAMP) {
 				Entity entity=new EnderDragonEntity(EntityType.ENDER_DRAGON,chunk.getWorld());
 				entity.setPosition(200,80,200);
 				chunk.addEntity(entity);
