@@ -20,9 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(World.class)
 public abstract class MixinWorld {
     @Shadow public abstract World getWorld();
-    @Shadow @Final protected LevelProperties properties;
-
-    @Shadow @Final protected static Logger LOGGER;
 
     @Inject(method = "createExplosion(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;" +
             "DDDFZLnet/minecraft/world/explosion/Explosion$DestructionType;)Lnet/minecraft/world/explosion/Explosion;",
@@ -35,13 +32,16 @@ public abstract class MixinWorld {
     }
     @Inject(method = "getTimeOfDay",at=@At("RETURN"),cancellable = true)
     public void onGetTimeOfDay(CallbackInfoReturnable<Long> cir){
-        for(PlayerEntity player:getWorld().getPlayers()) {
-            DayNightCallback.DAY_NIGHT_CALLBACK_EVENT.invoker().accept(getWorld(), player);
-            if (cir.getReturnValue() == 450)
-                LOGGER.info("Sunrise finished!");
-            if (cir.getReturnValue() == 12010)
-                LOGGER.info("Sunset start!");
+        if (cir.getReturnValue() == 450) {
+            for (PlayerEntity player : getWorld().getPlayers()) {
+                DayNightCallback.DAY_NIGHT_CALLBACK_EVENT.invoker().accept(getWorld(), player);
+            }
         }
-    }
+            if (cir.getReturnValue() == 12010) {
+                for (PlayerEntity player : getWorld().getPlayers()) {
+                    DayNightCallback.DAY_NIGHT_CALLBACK_EVENT.invoker().accept(getWorld(), player);
+                }
+            }
+        }
 }
 
