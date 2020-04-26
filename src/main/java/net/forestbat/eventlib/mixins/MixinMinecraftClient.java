@@ -18,10 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = MinecraftClient.class)
 public abstract class MixinMinecraftClient {
-    @Shadow @Final private static Logger LOGGER;
-
-    @Shadow public Window window;
-
     @Shadow public ClientPlayerEntity player;
 
     @Inject(method = "init",at = @At("RETURN"),cancellable = true)

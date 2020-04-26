@@ -19,8 +19,7 @@ import java.util.List;
 
 @Mixin(NetworkThreadUtils.class)
 public class MixinNetworkThreadUtil {
-    @Inject(method="forceMainThread(Lnet/minecraft/network/Packet;" +
-            "Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/ThreadExecutor;)V"
+    @Inject(method="forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/ThreadExecutor;)V"
     ,at=@At("RETURN"),cancellable = true)
     private static <T extends PacketListener> void afterForceMainThread(Packet<T> packet, T packetListener,
                                                                         ThreadExecutor<?> threadExecutor, CallbackInfo ci) {

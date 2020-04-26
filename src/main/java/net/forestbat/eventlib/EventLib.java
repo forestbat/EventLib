@@ -95,14 +95,14 @@ public class EventLib implements ModInitializer {
 			return ActionResult.PASS;
 		}));
 		//todo proved
-		ChunkLoadCallback.CHUNK_LOAD_CALLBACK_EVENT.register((chunk -> {
+		/*ChunkLoadCallback.CHUNK_LOAD_CALLBACK_EVENT.register((chunk -> {
 			if(chunk!=null && chunk.getBiome(new BlockPos(200,80,200))== Biomes.SWAMP) {
 				Entity entity=new EnderDragonEntity(EntityType.ENDER_DRAGON,chunk.getWorld());
 				entity.setPosition(200,80,200);
 				chunk.addEntity(entity);
 			}
 			return ActionResult.PASS;
-		}));
+		}));*/
 		//todo proved
 		DayNightCallback.DAY_NIGHT_CALLBACK_EVENT.register(((world, player) -> {
 			if(world.isThundering())

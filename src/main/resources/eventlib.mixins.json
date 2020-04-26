@@ -8,7 +8,6 @@
     "MixinEnchantment",
     "MixinEntity",
     "MixinEntitySpawn",
-    "MixinExplosion",
     "MixinFireworkItem",
     "MixinFishingBobberEntity",
     "MixinItemStack",
